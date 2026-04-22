@@ -7,22 +7,27 @@
     
     <link rel="icon" type="image/png" href="https://apzinmix.github.io/favs/img/favicon.png">
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Orbitron:wght@500;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg-color: #0a0a0a;
-            --card-bg: #161616;
+            --bg-color: #050505;
+            --card-bg: rgba(22, 22, 22, 0.8);
             --accent-color: #ffcc00; /* Amarelo Nômade */
             --text-color: #ffffff;
-            --border-color: #2a2a2a;
-            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * { box-sizing: border-box; }
 
         body {
             background-color: var(--bg-color);
+            /* Grid futurista no fundo */
+            background-image: 
+                linear-gradient(rgba(255, 204, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 204, 0, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
             color: var(--text-color);
             font-family: 'Inter', sans-serif;
             margin: 0;
@@ -34,11 +39,14 @@
         }
 
         h1 {
+            font-family: 'Orbitron', sans-serif;
             color: var(--accent-color);
-            letter-spacing: 4px;
+            letter-spacing: 10px;
             margin-bottom: 50px;
-            font-size: 1.5rem;
+            font-size: 2rem;
             text-transform: uppercase;
+            text-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
+            animation: fadeIn 1s ease-in;
         }
 
         .grid-container {
@@ -49,10 +57,10 @@
             width: 100%;
         }
 
-        /* Estilo do Botão com Highligt e Zoom */
         .fav-card {
             background: var(--card-bg);
-            border-radius: 20px;
+            backdrop-filter: blur(8px);
+            border-radius: 16px;
             padding: 25px 10px;
             text-decoration: none;
             color: var(--text-color);
@@ -64,14 +72,14 @@
             cursor: pointer;
             text-align: center;
             position: relative;
+            animation: slideUp 0.5s ease-out;
         }
 
         .fav-card:hover {
-            transform: scale(1.08); /* Efeito Zoom */
+            transform: translateY(-5px) scale(1.03);
             border-color: var(--accent-color);
-            background: #1f1f1f;
-            /* Highlight Amarelo Neon */
-            box-shadow: 0 0 25px rgba(255, 204, 0, 0.25);
+            background: rgba(30, 30, 30, 0.9);
+            box-shadow: 0 0 30px rgba(255, 204, 0, 0.15);
             z-index: 10;
         }
 
@@ -81,6 +89,11 @@
             margin-bottom: 12px;
             border-radius: 6px;
             object-fit: contain;
+            transition: var(--transition);
+        }
+
+        .fav-card:hover img {
+            filter: drop-shadow(0 0 5px var(--accent-color));
         }
 
         .emoji-icon {
@@ -89,17 +102,19 @@
             line-height: 1;
         }
 
+        /* Texto Branco -> Amarelo no Hover */
         .fav-card span {
             font-size: 0.7rem;
             text-transform: uppercase;
-            letter-spacing: 1.2px;
+            letter-spacing: 1.5px;
             font-weight: 700;
-            color: #888;
+            color: #ffffff; /* Inicialmente Branco */
             transition: var(--transition);
         }
 
         .fav-card:hover span {
-            color: var(--accent-color);
+            color: var(--accent-color); /* Fica Amarelo no Hover */
+            text-shadow: 0 0 8px rgba(255, 204, 0, 0.5);
         }
 
         /* Modais */
@@ -111,31 +126,39 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.92);
-            backdrop-filter: blur(10px);
+            background-color: rgba(0,0,0,0.95);
+            backdrop-filter: blur(15px);
             align-items: center;
             justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            opacity: 1;
         }
 
         .modal-content {
-            background: var(--card-bg);
+            background: #111;
             padding: 35px;
-            border-radius: 28px;
+            border-radius: 24px;
             border: 1px solid var(--accent-color);
             width: 90%;
             max-width: 500px;
-            animation: modalIn 0.3s ease-out;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 0 50px rgba(255, 204, 0, 0.1);
         }
 
-        @keyframes modalIn {
-            from { opacity: 0; transform: translateY(20px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+        .modal.active .modal-content {
+            transform: translateY(0);
         }
 
         .tab-container {
             display: flex;
             justify-content: center;
-            gap: 10px;
+            gap: 15px;
             margin-bottom: 25px;
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 15px;
@@ -144,11 +167,12 @@
         .tab-btn {
             background: none;
             border: none;
-            color: #666;
+            color: #555;
             font-weight: 700;
             cursor: pointer;
             text-transform: uppercase;
             font-size: 0.8rem;
+            font-family: 'Orbitron', sans-serif;
             padding: 8px 15px;
             transition: var(--transition);
         }
@@ -156,6 +180,7 @@
         .tab-btn.active {
             color: var(--accent-color);
             border-bottom: 2px solid var(--accent-color);
+            text-shadow: 0 0 10px var(--accent-color);
         }
 
         .modal-grid, .tab-content {
@@ -167,18 +192,27 @@
         .tab-content { display: none; grid-template-columns: repeat(3, 1fr); }
         .tab-content.active { display: grid; }
 
-        .modal.active { display: flex; }
-
         h3 {
+            font-family: 'Orbitron', sans-serif;
             text-align: center;
             margin-top: 0;
             margin-bottom: 25px;
             text-transform: uppercase;
             letter-spacing: 3px;
-            font-size: 0.9rem;
+            font-size: 1rem;
             color: var(--accent-color);
-            opacity: 0.8;
         }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        /* Scrollbar Cyber */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 10px; }
+        ::-webkit-scrollbar-track { background: #050505; }
     </style>
 </head>
 <body>
@@ -238,12 +272,12 @@
         
         <div class="fav-card" onclick="openModal('googleModal')">
             <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google">
-            <span style="color: var(--accent-color);">Google Hub</span>
+            <span>Google Hub</span>
         </div>
 
         <div class="fav-card" onclick="openModal('streamingModal')">
             <div class="emoji-icon">🎬</div>
-            <span style="color: var(--accent-color);">Streamings</span>
+            <span>Streamings</span>
         </div>
     </div>
 
@@ -342,7 +376,6 @@
             event.currentTarget.classList.add('active');
         }
 
-        // Fecha clicando fora ou apertando ESC
         document.addEventListener('keydown', (event) => {
             if (event.key === 'Escape') {
                 document.querySelectorAll('.modal').forEach(m => closeModal(m.id));
