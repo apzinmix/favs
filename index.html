@@ -3,371 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FAVS</title>
-    
+    <title>FAVS HUB</title>
     <link rel="icon" type="image/png" href="https://apzinmix.github.io/favs/img/favicon.png">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600&family=Orbitron:wght@500;800&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Orbitron:wght@500&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-color: #030303;
-            --card-bg: rgba(20, 20, 20, 0.6);
-            --accent-color: #ffcc00; /* Amarelo Nômade */
-            --accent-glow: rgba(255, 204, 0, 0.25);
-            --text-color: #ffffff;
-            --border-color: rgba(255, 255, 255, 0.05);
-            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        :root { 
+            --bg: #030303; 
+            --accent: #ffcc00; 
+            --card: rgba(20,20,20,0.6); 
+            --trans: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            --gap-size: 60px; /* Altere aqui para aumentar/diminuir o espaço igualitário */
         }
-
-        * { box-sizing: border-box; outline: none; }
-
-        body {
-            background-color: var(--bg-color);
-            /* FUNDO QUADRICULADO (GRID) MANTIDO E OTIMIZADO */
-            background-image: 
-                linear-gradient(rgba(255, 204, 0, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 204, 0, 0.02) 1px, transparent 1px);
-            background-size: 50px 50px;
-            color: var(--text-color);
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            padding: 60px 20px;
-            display: flex;
-            flex-direction: column;
+        
+        body { 
+            background: var(--bg); 
+            background-image: linear-gradient(rgba(255,204,0,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,204,0,0.02) 1px, transparent 1px); 
+            background-size: 50px 50px; 
+            color: #fff; 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
             align-items: center;
             min-height: 100vh;
+            /* O padding do topo será igual ao espaço abaixo do título */
+            padding: var(--gap-size) 20px; 
         }
 
-        h1 {
-            font-family: 'Orbitron', sans-serif;
-            color: var(--accent-color);
-            letter-spacing: 15px;
-            margin-bottom: 50px;
-            text-transform: uppercase;
+        h1 { 
+            font-family: 'Orbitron'; 
+            color: var(--accent); 
+            letter-spacing: 15px; 
+            text-transform: uppercase; 
+            text-shadow: 0 0 15px rgba(255,204,0,0.25); 
+            /* Margem inferior idêntica ao padding-top do body para ser equidistante */
+            margin: 0 0 var(--gap-size) 0; 
             font-size: 1.8rem;
-            text-shadow: 0 0 15px var(--accent-glow);
-            font-weight: 500;
-        }
-
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 15px;
-            max-width: 1000px;
-            width: 100%;
-        }
-
-        /* Divisor de Setor High-Tech */
-        .section-divider {
-            grid-column: 1 / -1;
-            display: flex;
-            align-items: center;
-            margin: 30px 0 15px;
-            opacity: 0.7;
-        }
-
-        .section-divider::before, .section-divider::after {
-            content: "";
-            flex: 1;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 204, 0, 0.1), transparent);
-        }
-
-        .section-divider span {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.6rem;
-            letter-spacing: 5px;
-            text-transform: uppercase;
-            padding: 0 20px;
-            color: var(--accent-color);
-            text-shadow: 0 0 10px var(--accent-glow);
-        }
-
-        .fav-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            padding: 25px 10px;
-            text-decoration: none;
-            color: var(--text-color);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: var(--transition);
-            border: 1px solid var(--border-color);
-            cursor: pointer;
-            text-align: center;
-        }
-
-        .fav-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent-color);
-            background: rgba(30, 30, 30, 0.8);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 204, 0, 0.15);
-        }
-
-        /* Efeito Comum para Ícones e Imagens */
-        .fav-card img, .emoji-icon {
-            width: 40px;
-            height: 40px;
-            margin-bottom: 15px;
-            transition: var(--transition);
-        }
-
-        /* Efeito de Rotação e Brilho no Hover */
-        .fav-card:hover img, .fav-card:hover .emoji-icon {
-            transform: scale(1.1) rotate(5deg);
-            filter: drop-shadow(0 0 8px var(--accent-color));
-        }
-
-        .emoji-icon {
-            font-size: 32px;
             line-height: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
-        /* Texto Branco -> Amarelo no Hover */
-        .fav-card span {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 600;
-            color: #ffffff;
-            transition: var(--transition);
+        .grid-container { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); 
+            gap: 15px; 
+            width: 100%; 
+            max-width: 1000px;
         }
 
-        .fav-card:hover span {
-            color: var(--accent-color);
-            text-shadow: 0 0 10px rgba(255, 204, 0, 0.4);
-        }
+        .section-divider { grid-column: 1 / -1; display: flex; align-items: center; margin: 30px 0 15px; opacity: 0.7; }
+        .section-divider::before, .section-divider::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,204,0,0.1), transparent); }
+        .section-divider span { font-family: 'Orbitron'; font-size: 0.6rem; letter-spacing: 5px; padding: 0 20px; color: var(--accent); }
+        
+        .fav-card { background: var(--card); backdrop-filter: blur(10px); border-radius: 12px; padding: 25px 10px; text-decoration: none; color: #fff; display: flex; flex-direction: column; align-items: center; transition: var(--trans); border: 1px solid rgba(255,255,255,0.05); cursor: pointer; text-align: center; }
+        .fav-card:hover { transform: translateY(-5px); border-color: var(--accent); background: rgba(30,30,30,0.8); box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 20px rgba(255,204,0,0.15); }
+        .fav-card img, .emoji-icon { width: 38px; height: 38px; margin-bottom: 15px; transition: var(--trans); }
+        .fav-card:hover img, .fav-card:hover .emoji-icon { transform: scale(1.1) rotate(5deg); filter: drop-shadow(0 0 8px var(--accent)); }
+        .emoji-icon { font-size: 32px; display: flex; align-items: center; justify-content: center; }
+        .fav-card span { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; transition: var(--trans); }
+        .fav-card:hover span { color: var(--accent); text-shadow: 0 0 10px rgba(255,204,0,0.4); }
 
-        /* Modais Minimalistas e High-Tech */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0; top: 0;
-            width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.95);
-            backdrop-filter: blur(15px);
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .modal.active {
-            display: flex;
-            opacity: 1;
-        }
-
-        .modal-content {
-            background: #080808;
-            padding: 35px;
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
-            width: 90%;
-            max-width: 500px;
-            transform: scale(0.9) translateY(20px);
-            transition: var(--transition);
-            box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 15px rgba(255,204,0,0.03);
-        }
-
-        .modal.active .modal-content {
-            transform: scale(1) translateY(0);
-            border-color: var(--accent-color);
-        }
-
-        .tab-container {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 25px;
-            border-bottom: 1px solid #1a1a1a;
-            padding-bottom: 15px;
-        }
-
-        .tab-btn {
-            background: none;
-            border: none;
-            color: #444;
-            font-weight: 600;
-            cursor: pointer;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            font-family: 'Orbitron', sans-serif;
-            letter-spacing: 2px;
-            padding: 8px 15px;
-            transition: var(--transition);
-        }
-
-        .tab-btn.active {
-            color: var(--accent-color);
-            border-bottom: 2px solid var(--accent-color);
-            text-shadow: 0 0 10px var(--accent-glow);
-        }
-
-        .modal-grid, .tab-content {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-        }
-
+        /* Modais */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); align-items: center; justify-content: center; opacity: 0; transition: 0.3s; }
+        .modal.active { display: flex; opacity: 1; }
+        .modal-content { background: #080808; padding: 35px; border-radius: 20px; border: 1px solid var(--accent); width: 90%; max-width: 550px; }
+        .tab-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; border-bottom: 1px solid #1a1a1a; padding-bottom: 15px; }
+        .tab-btn { background: none; border: none; color: #444; cursor: pointer; font-family: 'Orbitron'; font-size: 0.75rem; padding: 8px 15px; }
+        .tab-btn.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
+        .modal-grid, .tab-content { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
         .tab-content { display: none; grid-template-columns: repeat(3, 1fr); }
         .tab-content.active { display: grid; }
-
-        h3 {
-            font-family: 'Orbitron', sans-serif;
-            text-align: center;
-            margin-top: 0;
-            margin-bottom: 25px;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            font-size: 0.9rem;
-            color: var(--accent-color);
-            font-weight: 500;
-        }
+        h3 { font-family: 'Orbitron'; text-align: center; color: var(--accent); font-size: 0.9rem; }
     </style>
 </head>
 <body>
-
     <h1>FAVS HUB</h1>
-
-    <div class="grid-container">
-        <a href="https://youtube.com" class="fav-card" target="_blank">
-            <img src="https://www.google.com/s2/favicons?domain=youtube.com&sz=128" alt="">
-            <span>YouTube</span>
-        </a>
-
-        <a href="https://y2meta.is" class="fav-card" target="_blank">
-            <img src="https://www.google.com/s2/favicons?domain=y2meta.is&sz=128" alt="">
-            <span>URL to MP3</span>
-        </a>
-        
-        <a href="https://canva.com" class="fav-card" target="_blank">
-            <img src="https://www.google.com/s2/favicons?domain=canva.com&sz=128" alt="">
-            <span>Canva</span>
-        </a>
-      
-        <a href="https://soundcloud.com" class="fav-card" target="_blank">
-            <img src="https://www.google.com/s2/favicons?domain=soundcloud.com&sz=128" alt="">
-            <span>SoundCloud</span>
-        </a>
-
-        <a href="https://tidal.com" class="fav-card" target="_blank">
-            <img src="https://www.google.com/s2/favicons?domain=tidal.com&sz=128" alt="">
-            <span>Tidal</span>
-        </a>
-        
-        <a href="https://looperman.com" class="fav-card" target="_blank">
-            <img src="https://www.google.com/s2/favicons?domain=looperman.com&sz=128" alt="">
-            <span>Looperman</span>
-        </a>
-
-        <a href="https://splice.com" class="fav-card" target="_blank">
-            <img src="https://www.google.com/s2/favicons?domain=splice.com&sz=128" alt="">
-            <span>Splice</span>
-        </a>
-
-        <a href="https://identifyy.com" class="fav-card" target="_blank">
-            <img src="https://www.google.com/s2/favicons?domain=identifyy.com&sz=128" alt="">
-            <span>Identifyy</span>
-        </a>
-
-        <a href="https://tunebat.com" class="fav-card" target="_blank">
-            <img src="https://www.google.com/s2/favicons?domain=tunebat.com&sz=128" alt="">
-            <span>Tunebat</span>
-        </a>
-
-        <a href="https://chatgpt.com" class="fav-card" target="_blank">
-            <img src="https://www.google.com/s2/favicons?domain=chatgpt.com&sz=128" alt="">
-            <span>ChatGPT</span>
-        </a>
-
-        <a href="https://gemini.google.com" class="fav-card" target="_blank">
-            <img src="https://www.google.com/s2/favicons?domain=gemini.google.com&sz=128" alt="">
-            <span>Gemini</span>
-        </a>
-        
-        <a href="https://beatplace.co" class="fav-card" target="_blank">
-            <img src="https://www.google.com/s2/favicons?domain=beatplace.co&sz=128" alt="">
-            <span>Beatplace</span>
-        </a>
-
-        <a href="https://instagram.com" class="fav-card" target="_blank">
-            <img src="https://www.google.com/s2/favicons?domain=instagram.com&sz=128" alt="">
-            <span>Instagram</span>
-        </a>
-
-        <a href="https://substack.com" class="fav-card" target="_blank">
-            <img src="https://www.google.com/s2/favicons?domain=substack.com&sz=128" alt="">
-            <span>Substack</span>
-        </a>
-        
-        <a href="https://sso.hotmart.com" class="fav-card" target="_blank">
-            <img src="https://www.google.com/s2/favicons?domain=sso.hotmart.com&sz=128" alt="">
-            <span>Hotmart</span>
-        </a>
-        
-        <a href="https://github.com" class="fav-card" target="_blank">
-            <img src="https://www.google.com/s2/favicons?domain=github.com&sz=128" alt="">
-            <span>GitHub</span>
-        </a>
-
-       <a href="https://mercadolivre.com.br" class="fav-card" target="_blank">
-            <img src="https://www.google.com/s2/favicons?domain=mercadolivre.com.br&sz=128" alt="">
-            <span>Mercado Livre</span>
-        </a>
-
-        <a href="https://notion.com" class="fav-card" target="_blank">
-            <img src="https://www.google.com/s2/favicons?domain=notion.com&sz=128" alt="">
-            <span>Notion</span>
-        </a>
-        
-        <a href="https://portal.abramus.org.br" class="fav-card" target="_blank">
-            <img src="https://www.google.com/s2/favicons?domain=portal.abramus.org.br&sz=128" alt="">
-            <span>Portal Abramus</span>
-        </a>
-
-        <div class="section-divider">
-            <span>System // Hubs</span>
-        </div>
-
-        <div class="fav-card" onclick="openModal('googleModal')">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google">
-            <span>Google</span>
-        </div>
-
-        <div class="fav-card" onclick="openModal('streamingModal')">
-            <div class="emoji-icon">🎬</div>
-            <span>Streamings</span>
-        </div>
-    </div>
+    <div id="main-grid" class="grid-container"></div>
 
     <div id="googleModal" class="modal" onclick="closeModal('googleModal')">
         <div class="modal-content" onclick="event.stopPropagation()">
             <h3>Google Hub</h3>
-            <div class="modal-grid">
-                <a href="https://calendar.google.com" class="fav-card" target="_blank">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" alt="">
-                    <span>Agenda</span>
-                </a>
-                <a href="https://drive.google.com" class="fav-card" target="_blank">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" alt="">
-                    <span>Drive</span>
-                </a>
-                <a href="https://mail.google.com" class="fav-card" target="_blank">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg" alt="">
-                    <span>Gmail</span>
-                </a>
-                <a href="https://keep.google.com" class="fav-card" target="_blank">
-                    <img src="https://www.gstatic.com/images/branding/product/2x/keep_2020q4_48dp.png" alt="">
-                    <span>Keep</span>
-                </a>
-            </div>
+            <div id="google-grid" class="modal-grid"></div>
         </div>
     </div>
 
@@ -377,76 +92,74 @@
                 <button class="tab-btn active" onclick="showTab('originais', event)">Originais</button>
                 <button class="tab-btn" onclick="showTab('piratas', event)">Piratas</button>
             </div>
-
-            <div id="originais" class="tab-content active">
-                <a href="https://netflix.com" class="fav-card" target="_blank">
-                    <img src="https://www.google.com/s2/favicons?domain=netflix.com&sz=64" alt="">
-                    <span>Netflix</span>
-                </a>
-                <a href="https://primevideo.com" class="fav-card" target="_blank">
-                    <img src="https://www.google.com/s2/favicons?domain=primevideo.com&sz=64" alt="">
-                    <span>Prime Video</span>
-                </a>
-                <a href="https://disneyplus.com" class="fav-card" target="_blank">
-                    <img src="https://www.google.com/s2/favicons?domain=disneyplus.com&sz=64" alt="">
-                    <span>Disney+</span>
-                </a>
-                <a href="https://hbo.com" class="fav-card" target="_blank">
-                    <img src="https://www.google.com/s2/favicons?domain=hbo.com&sz=64" alt="">
-                    <span>HBO Max</span>
-                </a>
-            </div>
-
-            <div id="piratas" class="tab-content">
-                <a href="https://netcinevu.lat" class="fav-card" target="_blank">
-                    <img src="https://www.google.com/s2/favicons?domain=netcinevu.lat&sz=64" alt="">
-                    <span>NetCine</span>
-                </a>
-                <a href="https://cracksports.me" class="fav-card" target="_blank">
-                    <img src="https://www.google.com/s2/favicons?domain=cracksports.me&sz=64" alt="">
-                    <span>Crack Sports</span>
-                </a>
-                <a href="https://watchseries.bar" class="fav-card" target="_blank">
-                    <img src="https://www.google.com/s2/favicons?domain=watchseries.bar&sz=64" alt="">
-                    <span>Watchseries</span>
-                </a>
-                <a href="https://solarmoviesz.com" class="fav-card" target="_blank">
-                    <img src="https://www.google.com/s2/favicons?domain=solarmoviesz.com&sz=64" alt="">
-                    <span>Solar Movie</span>
-                </a>
-                <a href="https://123chill.uk" class="fav-card" target="_blank">
-                    <img src="https://www.google.com/s2/favicons?domain=123chill.uk&sz=64" alt="">
-                    <span>Hurawatch</span>
-                </a>
-            </div>
+            <div id="originais" class="tab-content active"></div>
+            <div id="piratas" class="tab-content"></div>
         </div>
     </div>
 
     <script>
-        function openModal(id) {
-            const modal = document.getElementById(id);
-            modal.style.display = 'flex';
-            setTimeout(() => { modal.classList.add('active'); }, 10);
-        }
+        const links = [
+            { n: "YouTube", u: "https://youtube.com" },
+            { n: "URL to MP3", u: "https://y2meta.is" },
+            { n: "Canva", u: "https://canva.com" },
+            { n: "SoundCloud", u: "https://soundcloud.com" },
+            { n: "Tidal", u: "https://tidal.com" },
+            { n: "Looperman", u: "https://looperman.com" },
+            { n: "Splice", u: "https://splice.com" },
+            { n: "Identifyy", u: "https://identifyy.com" },
+            { n: "Tunebat", u: "https://tunebat.com" },
+            { n: "ChatGPT", u: "https://chatgpt.com" },
+            { n: "Gemini", u: "https://gemini.google.com" },
+            { n: "Beatplace", u: "https://beatplace.co" },
+            { n: "Instagram", u: "https://instagram.com" },
+            { n: "Substack", u: "https://substack.com" },
+            { n: "Hotmart", u: "https://sso.hotmart.com" },
+            { n: "GitHub", u: "https://github.com" },
+            { n: "Mercado Livre", u: "https://mercadolivre.com.br" },
+            { n: "Notion", u: "https://notion.com" },
+            { n: "Portal Abramus", u: "https://portal.abramus.org.br" }
+        ];
 
-        function closeModal(id) {
-            const modal = document.getElementById(id);
-            modal.classList.remove('active');
-            setTimeout(() => { modal.style.display = 'none'; }, 300);
-        }
+        const google = [
+            { n: "Agenda", u: "https://calendar.google.com", i: "https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" },
+            { n: "Drive", u: "https://drive.google.com", i: "https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" },
+            { n: "Gmail", u: "https://mail.google.com", i: "https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg" },
+            { n: "Keep", u: "https://keep.google.com", i: "https://www.gstatic.com/images/branding/product/2x/keep_2020q4_48dp.png" }
+        ];
 
-        function showTab(tabId, event) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            event.currentTarget.classList.add('active');
-        }
+        const originais = [
+            { n: "Netflix", u: "https://netflix.com" }, { n: "Prime Video", u: "https://primevideo.com" },
+            { n: "Disney+", u: "https://disneyplus.com" }, { n: "HBO Max", u: "https://hbo.com" }
+        ];
 
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape') {
-                document.querySelectorAll('.modal').forEach(m => closeModal(m.id));
-            }
-        });
+        const piratas = [
+            { n: "NetCine", u: "https://netcinevu.lat" }, { n: "Crack Sports", u: "https://cracksports.me" },
+            { n: "Watchseries", u: "https://watchseries.bar" }, { n: "Solar Movie", u: "https://solarmoviesz.com" }, { n: "Hurawatch", u: "https://123chill.uk" }
+        ];
+
+        const createCard = (l) => `
+            <a href="${l.u}" class="fav-card" target="_blank">
+                <img src="${l.i || 'https://www.google.com/s2/favicons?domain='+l.u+'&sz=128'}">
+                <span>${l.n}</span>
+            </a>`;
+
+        const render = () => {
+            document.getElementById('main-grid').innerHTML = links.map(createCard).join('') + 
+                `<div class="section-divider"><span>System // Hubs</span></div>
+                 <div class="fav-card" onclick="openModal('googleModal')"><img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"><span>Google</span></div>
+                 <div class="fav-card" onclick="openModal('streamingModal')"><div class="emoji-icon">🎬</div><span>Streamings</span></div>`;
+            document.getElementById('google-grid').innerHTML = google.map(createCard).join('');
+            document.getElementById('originais').innerHTML = originais.map(createCard).join('');
+            document.getElementById('piratas').innerHTML = piratas.map(createCard).join('');
+        };
+
+        function openModal(id) { const m = document.getElementById(id); m.style.display = 'flex'; setTimeout(() => m.classList.add('active'), 10); }
+        function closeModal(id) { const m = document.getElementById(id); m.classList.remove('active'); setTimeout(() => m.style.display = 'none', 300); }
+        function showTab(tabId, e) {
+            document.querySelectorAll('.tab-content, .tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active'); e.currentTarget.classList.add('active');
+        }
+        render();
     </script>
 </body>
 </html>
