@@ -3,35 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Favs Hub</title>
+    <title>Favs Hub | System</title>
     
     <link rel="icon" type="image/png" href="https://apzinmix.github.io/favs/img/favicon.png">
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Orbitron:wght@500;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600&family=Orbitron:wght@500;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg-color: #050505;
-            --card-bg: rgba(22, 22, 22, 0.8);
+            --bg-color: #030303;
+            --card-bg: rgba(20, 20, 20, 0.6);
             --accent-color: #ffcc00; /* Amarelo Nômade */
+            --accent-glow: rgba(255, 204, 0, 0.25);
             --text-color: #ffffff;
-            --border-color: rgba(255, 255, 255, 0.08);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --border-color: rgba(255, 255, 255, 0.05);
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; outline: none; }
 
         body {
             background-color: var(--bg-color);
-            /* Grid futurista no fundo */
+            /* FUNDO QUADRICULADO (GRID) MANTIDO E OTIMIZADO */
             background-image: 
-                linear-gradient(rgba(255, 204, 0, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 204, 0, 0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
+                linear-gradient(rgba(255, 204, 0, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 204, 0, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
             color: var(--text-color);
             font-family: 'Inter', sans-serif;
             margin: 0;
-            padding: 40px 20px;
+            padding: 60px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -41,26 +42,52 @@
         h1 {
             font-family: 'Orbitron', sans-serif;
             color: var(--accent-color);
-            letter-spacing: 10px;
+            letter-spacing: 15px;
             margin-bottom: 50px;
-            font-size: 2rem;
             text-transform: uppercase;
-            text-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
-            animation: fadeIn 1s ease-in;
+            font-size: 1.8rem;
+            text-shadow: 0 0 15px var(--accent-glow);
+            font-weight: 500;
         }
 
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
             gap: 15px;
-            max-width: 1100px;
+            max-width: 1000px;
             width: 100%;
+        }
+
+        /* Divisor de Setor High-Tech */
+        .section-divider {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            margin: 30px 0 15px;
+            opacity: 0.7;
+        }
+
+        .section-divider::before, .section-divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 204, 0, 0.1), transparent);
+        }
+
+        .section-divider span {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.6rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            padding: 0 20px;
+            color: var(--accent-color);
+            text-shadow: 0 0 10px var(--accent-glow);
         }
 
         .fav-card {
             background: var(--card-bg);
-            backdrop-filter: blur(8px);
-            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
             padding: 25px 10px;
             text-decoration: none;
             color: var(--text-color);
@@ -71,61 +98,59 @@
             border: 1px solid var(--border-color);
             cursor: pointer;
             text-align: center;
-            position: relative;
-            animation: slideUp 0.5s ease-out;
         }
 
         .fav-card:hover {
-            transform: translateY(-5px) scale(1.03);
+            transform: translateY(-5px);
             border-color: var(--accent-color);
-            background: rgba(30, 30, 30, 0.9);
-            box-shadow: 0 0 30px rgba(255, 204, 0, 0.15);
-            z-index: 10;
+            background: rgba(30, 30, 30, 0.8);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 204, 0, 0.15);
         }
 
-        .fav-card img {
-            width: 38px;
-            height: 38px;
-            margin-bottom: 12px;
-            border-radius: 6px;
-            object-fit: contain;
+        /* Efeito Comum para Ícones e Imagens */
+        .fav-card img, .emoji-icon {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 15px;
             transition: var(--transition);
         }
 
-        .fav-card:hover img {
-            filter: drop-shadow(0 0 5px var(--accent-color));
+        /* Efeito de Rotação e Brilho no Hover */
+        .fav-card:hover img, .fav-card:hover .emoji-icon {
+            transform: scale(1.1) rotate(5deg);
+            filter: drop-shadow(0 0 8px var(--accent-color));
         }
 
         .emoji-icon {
             font-size: 32px;
-            margin-bottom: 12px;
             line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         /* Texto Branco -> Amarelo no Hover */
         .fav-card span {
             font-size: 0.7rem;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            font-weight: 700;
-            color: #ffffff; /* Inicialmente Branco */
+            letter-spacing: 2px;
+            font-weight: 600;
+            color: #ffffff;
             transition: var(--transition);
         }
 
         .fav-card:hover span {
-            color: var(--accent-color); /* Fica Amarelo no Hover */
-            text-shadow: 0 0 8px rgba(255, 204, 0, 0.5);
+            color: var(--accent-color);
+            text-shadow: 0 0 10px rgba(255, 204, 0, 0.4);
         }
 
-        /* Modais */
+        /* Modais Minimalistas e High-Tech */
         .modal {
             display: none;
             position: fixed;
             z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
             background-color: rgba(0,0,0,0.95);
             backdrop-filter: blur(15px);
             align-items: center;
@@ -140,39 +165,41 @@
         }
 
         .modal-content {
-            background: #111;
+            background: #080808;
             padding: 35px;
-            border-radius: 24px;
-            border: 1px solid var(--accent-color);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
             width: 90%;
             max-width: 500px;
-            transform: translateY(20px);
-            transition: transform 0.3s ease;
-            box-shadow: 0 0 50px rgba(255, 204, 0, 0.1);
+            transform: scale(0.9) translateY(20px);
+            transition: var(--transition);
+            box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 15px rgba(255,204,0,0.03);
         }
 
         .modal.active .modal-content {
-            transform: translateY(0);
+            transform: scale(1) translateY(0);
+            border-color: var(--accent-color);
         }
 
         .tab-container {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 10px;
             margin-bottom: 25px;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid #1a1a1a;
             padding-bottom: 15px;
         }
 
         .tab-btn {
             background: none;
             border: none;
-            color: #555;
-            font-weight: 700;
+            color: #444;
+            font-weight: 600;
             cursor: pointer;
             text-transform: uppercase;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
             padding: 8px 15px;
             transition: var(--transition);
         }
@@ -180,7 +207,7 @@
         .tab-btn.active {
             color: var(--accent-color);
             border-bottom: 2px solid var(--accent-color);
-            text-shadow: 0 0 10px var(--accent-color);
+            text-shadow: 0 0 10px var(--accent-glow);
         }
 
         .modal-grid, .tab-content {
@@ -198,21 +225,11 @@
             margin-top: 0;
             margin-bottom: 25px;
             text-transform: uppercase;
-            letter-spacing: 3px;
-            font-size: 1rem;
+            letter-spacing: 4px;
+            font-size: 0.9rem;
             color: var(--accent-color);
+            font-weight: 500;
         }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUp { 
-            from { opacity: 0; transform: translateY(20px); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
-
-        /* Scrollbar Cyber */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 10px; }
-        ::-webkit-scrollbar-track { background: #050505; }
     </style>
 </head>
 <body>
@@ -225,6 +242,11 @@
             <span>YouTube</span>
         </a>
 
+        <a href="https://y2meta.is" class="fav-card" target="_blank">
+            <img src="https://www.google.com/s2/favicons?domain=y2meta.is&sz=128" alt="">
+            <span>URL to MP3</span>
+        </a>
+        
         <a href="https://canva.com" class="fav-card" target="_blank">
             <img src="https://www.google.com/s2/favicons?domain=canva.com&sz=128" alt="">
             <span>Canva</span>
@@ -235,9 +257,19 @@
             <span>SoundCloud</span>
         </a>
 
+        <a href="https://tidal.com" class="fav-card" target="_blank">
+            <img src="https://www.google.com/s2/favicons?domain=tidal.com&sz=128" alt="">
+            <span>Tidal</span>
+        </a>
+        
         <a href="https://looperman.com" class="fav-card" target="_blank">
             <img src="https://www.google.com/s2/favicons?domain=looperman.com&sz=128" alt="">
             <span>Looperman</span>
+        </a>
+
+        <a href="https://splice.com" class="fav-card" target="_blank">
+            <img src="https://www.google.com/s2/favicons?domain=splice.com&sz=128" alt="">
+            <span>Splice</span>
         </a>
 
         <a href="https://identifyy.com" class="fav-card" target="_blank">
@@ -255,6 +287,11 @@
             <span>ChatGPT</span>
         </a>
 
+        <a href="https://gemini.google.com" class="fav-card" target="_blank">
+            <img src="https://www.google.com/s2/favicons?domain=gemini.google.com&sz=128" alt="">
+            <span>Gemini</span>
+        </a>
+        
         <a href="https://beatplace.co" class="fav-card" target="_blank">
             <img src="https://www.google.com/s2/favicons?domain=beatplace.co&sz=128" alt="">
             <span>Beatplace</span>
@@ -265,14 +302,43 @@
             <span>Instagram</span>
         </a>
 
+        <a href="https://substack.com" class="fav-card" target="_blank">
+            <img src="https://www.google.com/s2/favicons?domain=substack.com&sz=128" alt="">
+            <span>Substack</span>
+        </a>
+        
+        <a href="https://sso.hotmart.com" class="fav-card" target="_blank">
+            <img src="https://www.google.com/s2/favicons?domain=sso.hotmart.com&sz=128" alt="">
+            <span>Hotmart</span>
+        </a>
+        
         <a href="https://github.com" class="fav-card" target="_blank">
             <img src="https://www.google.com/s2/favicons?domain=github.com&sz=128" alt="">
             <span>GitHub</span>
         </a>
+
+       <a href="https://mercadolivre.com.br" class="fav-card" target="_blank">
+            <img src="https://www.google.com/s2/favicons?domain=mercadolivre.com.br&sz=128" alt="">
+            <span>Mercado Livre</span>
+        </a>
+
+        <a href="https://notion.com" class="fav-card" target="_blank">
+            <img src="https://www.google.com/s2/favicons?domain=notion.com&sz=128" alt="">
+            <span>Notion</span>
+        </a>
         
+        <a href="https://portal.abramus.org.br" class="fav-card" target="_blank">
+            <img src="https://www.google.com/s2/favicons?domain=portal.abramus.org.br&sz=128" alt="">
+            <span>Portal Abramus</span>
+        </a>
+
+        <div class="section-divider">
+            <span>System // Hubs</span>
+        </div>
+
         <div class="fav-card" onclick="openModal('googleModal')">
             <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google">
-            <span>Google Hub</span>
+            <span>Google</span>
         </div>
 
         <div class="fav-card" onclick="openModal('streamingModal')">
