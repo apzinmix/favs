@@ -203,7 +203,7 @@
         }
 
         function resetView() {
-            mainTitle.innerText = "FAVS HUB";
+            mainTitle.innerText = "FAVORITES HUB";
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
             mainGrid.innerHTML = linksHome.map(createCard).join('');
         }
