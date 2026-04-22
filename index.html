@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FAVS HUB | Static Neural</title>
+    <title>FAVS HUB</title>
     <link rel="icon" type="image/png" href="https://apzinmix.github.io/favs/img/favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600&family=Orbitron:wght@500&display=swap" rel="stylesheet">
     <style>
@@ -24,9 +24,49 @@
             padding: var(--gap-size) 20px; 
         }
 
-        h1 { font-family: 'Orbitron'; color: var(--accent); letter-spacing: 15px; text-transform: uppercase; margin: 0 0 var(--gap-size) 0; font-size: 1.8rem; text-shadow: 0 0 15px rgba(255,204,0,0.2); }
+        /* Navegação Superior Direita */
+        nav {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            display: flex;
+            gap: 25px;
+        }
 
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 15px; width: 100%; max-width: 1000px; }
+        .nav-link {
+            font-family: 'Orbitron';
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #555;
+            cursor: pointer;
+            transition: var(--trans);
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--accent);
+            text-shadow: 0 0 10px var(--accent);
+        }
+
+        h1 { 
+            font-family: 'Orbitron'; 
+            color: var(--accent); 
+            letter-spacing: 15px; 
+            text-transform: uppercase; 
+            margin: 0 0 var(--gap-size) 0; 
+            font-size: 1.8rem; 
+            text-shadow: 0 0 15px rgba(255,204,0,0.2);
+            cursor: pointer;
+        }
+
+        .grid-container { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); 
+            gap: 15px; 
+            width: 100%; 
+            max-width: 1000px; 
+            transition: var(--trans);
+        }
 
         .section-divider { grid-column: 1 / -1; display: flex; align-items: center; margin: 30px 0 15px; opacity: 0.5; }
         .section-divider::before, .section-divider::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); }
@@ -36,13 +76,16 @@
             background: var(--card); 
             backdrop-filter: blur(10px); 
             border-radius: 12px; 
-            height: 90px; /* ALTURA FIXA E ESTÁTICA */
+            height: 90px;
             text-decoration: none; 
             display: flex; align-items: center; justify-content: center;
             transition: var(--trans); 
             border: 1px solid rgba(255,255,255,0.05); 
             cursor: pointer; position: relative; overflow: hidden;
+            animation: fadeIn 0.4s ease forwards;
         }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .fav-card:hover { 
             border-color: var(--accent); 
@@ -50,15 +93,13 @@
             box-shadow: 0 0 20px rgba(255,204,0,0.1);
         }
 
-        /* O ÍCONE */
         .fav-card img, .emoji-icon { 
             width: 32px; height: 32px; 
             transition: var(--trans); 
             opacity: 1;
-            position: absolute; /* Para não ocupar espaço no fluxo e permitir sobreposição */
+            position: absolute;
         }
 
-        /* O NOME */
         .fav-card span { 
             font-size: 0.65rem; 
             text-transform: uppercase; 
@@ -68,62 +109,29 @@
             text-align: center;
             padding: 0 10px;
             transition: var(--trans); 
-            opacity: 0; /* Escondido por padrão */
+            opacity: 0;
             transform: scale(0.8);
             position: absolute;
         }
 
-        /* EFEITO DE TROCA (O PONTO CHAVE) */
-        .fav-card:hover img, .fav-card:hover .emoji-icon { 
-            opacity: 0; /* Ícone some */
-            transform: scale(0.5);
-        }
-
-        .fav-card:hover span { 
-            opacity: 1; /* Nome aparece */
-            transform: scale(1);
-            text-shadow: 0 0 10px rgba(255,204,0,0.3);
-        }
+        .fav-card:hover img, .fav-card:hover .emoji-icon { opacity: 0; transform: scale(0.5); }
+        .fav-card:hover span { opacity: 1; transform: scale(1); text-shadow: 0 0 10px rgba(255,204,0,0.3); }
 
         .emoji-icon { font-size: 28px; display: flex; align-items: center; justify-content: center; }
-
-        /* Modais Simples */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); align-items: center; justify-content: center; opacity: 0; transition: 0.3s; }
-        .modal.active { display: flex; opacity: 1; }
-        .modal-content { background: #080808; padding: 30px; border-radius: 16px; border: 1px solid var(--accent); width: 90%; max-width: 500px; }
-        .tab-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #1a1a1a; padding-bottom: 10px; }
-        .tab-btn { background: none; border: none; color: #444; cursor: pointer; font-family: 'Orbitron'; font-size: 0.7rem; padding: 8px 15px; }
-        .tab-btn.active { color: var(--accent); border-bottom: 1px solid var(--accent); }
-        .modal-grid, .tab-content { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .tab-content { display: none; grid-template-columns: repeat(3, 1fr); }
-        .tab-content.active { display: grid; }
-        h3 { font-family: 'Orbitron'; text-align: center; color: var(--accent); font-size: 0.8rem; }
     </style>
 </head>
-<body>
-    <h1>FAVS HUB</h1>
-    <div id="main-grid" class="grid-container"></div>
+<body onclick="resetView()">
+    <nav onclick="event.stopPropagation()">
+        <div class="nav-link" id="nav-google" onclick="renderHub('google')">Google</div>
+        <div class="nav-link" id="nav-streaming" onclick="renderHub('streaming')">Streamings</div>
+    </nav>
 
-    <div id="googleModal" class="modal" onclick="closeModal('googleModal')">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <h3>Google Hub</h3>
-            <div id="google-grid" class="modal-grid"></div>
-        </div>
-    </div>
-
-    <div id="streamingModal" class="modal" onclick="closeModal('streamingModal')">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <div class="tab-container">
-                <button class="tab-btn active" onclick="showTab('originais', event)">Originais</button>
-                <button class="tab-btn" onclick="showTab('piratas', event)">Piratas</button>
-            </div>
-            <div id="originais" class="tab-content active"></div>
-            <div id="piratas" class="tab-content"></div>
-        </div>
-    </div>
+    <h1 id="main-title" onclick="resetView()">FAVS HUB</h1>
+    <div id="main-grid" class="grid-container" onclick="event.stopPropagation()"></div>
 
     <script>
-        const links = [
+        // --- BASE DE DADOS MANTIDA ---
+        const linksHome = [
             { n: "YouTube", u: "https://youtube.com" },
             { n: "URL to MP3", u: "https://y2meta.is" },
             { n: "Canva", u: "https://canva.com" },
@@ -145,19 +153,19 @@
             { n: "Portal Abramus", u: "https://portal.abramus.org.br" }
         ];
 
-        const google = [
+        const linksGoogle = [
             { n: "Agenda", u: "https://calendar.google.com", i: "https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" },
             { n: "Drive", u: "https://drive.google.com", i: "https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" },
             { n: "Gmail", u: "https://mail.google.com", i: "https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg" },
             { n: "Keep", u: "https://keep.google.com", i: "https://www.gstatic.com/images/branding/product/2x/keep_2020q4_48dp.png" }
         ];
 
-        const originais = [
+        const streamOriginais = [
             { n: "Netflix", u: "https://netflix.com" }, { n: "Prime Video", u: "https://primevideo.com" },
             { n: "Disney+", u: "https://disneyplus.com" }, { n: "HBO Max", u: "https://hbo.com" }
         ];
 
-        const piratas = [
+        const streamPiratas = [
             { n: "NetCine", u: "https://netcinevu.lat" }, { n: "Crack Sports", u: "https://cracksports.me" },
             { n: "Watchseries", u: "https://watchseries.bar" }, { n: "Solar Movie", u: "https://solarmoviesz.com" }, { n: "Hurawatch", u: "https://123chill.uk" }
         ];
@@ -168,23 +176,40 @@
                 <span>${l.n}</span>
             </a>`;
 
-        const render = () => {
-            document.getElementById('main-grid').innerHTML = links.map(createCard).join('') + 
-                `<div class="section-divider"><span>System // Hubs</span></div>
-                 <div class="fav-card" onclick="openModal('googleModal')"><img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"><span>Google</span></div>
-                 <div class="fav-card" onclick="openModal('streamingModal')"><div class="emoji-icon">🎬</div><span>Streamings</span></div>`;
-            document.getElementById('google-grid').innerHTML = google.map(createCard).join('');
-            document.getElementById('originais').innerHTML = originais.map(createCard).join('');
-            document.getElementById('piratas').innerHTML = piratas.map(createCard).join('');
-        };
+        const mainGrid = document.getElementById('main-grid');
+        const mainTitle = document.getElementById('main-title');
 
-        function openModal(id) { const m = document.getElementById(id); m.style.display = 'flex'; setTimeout(() => m.classList.add('active'), 10); }
-        function closeModal(id) { const m = document.getElementById(id); m.classList.remove('active'); setTimeout(() => m.style.display = 'none', 300); }
-        function showTab(tabId, e) {
-            document.querySelectorAll('.tab-content, .tab-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active'); e.currentTarget.classList.add('active');
+        // --- LÓGICA DE NAVEGAÇÃO ---
+
+        function renderHub(hub) {
+            mainGrid.innerHTML = ""; // Limpa a tela
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+
+            if (hub === 'google') {
+                mainTitle.innerText = "GOOGLE HUB";
+                document.getElementById('nav-google').classList.add('active');
+                mainGrid.innerHTML = linksGoogle.map(createCard).join('');
+            } 
+            else if (hub === 'streaming') {
+                mainTitle.innerText = "STREAMINGS";
+                document.getElementById('nav-streaming').classList.add('active');
+                mainGrid.innerHTML = `
+                    <div class="section-divider"><span>Originais</span></div>
+                    ${streamOriginais.map(createCard).join('')}
+                    <div class="section-divider"><span>Piratas</span></div>
+                    ${streamPiratas.map(createCard).join('')}
+                `;
+            }
         }
-        render();
+
+        function resetView() {
+            mainTitle.innerText = "FAVS HUB";
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            mainGrid.innerHTML = linksHome.map(createCard).join('');
+        }
+
+        // Inicializa o site na Home
+        resetView();
     </script>
 </body>
 </html>
