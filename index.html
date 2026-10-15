@@ -216,13 +216,10 @@
         <input type="text" id="search-input" class="search-input" placeholder="BUSCAR ATALHO" oninput="filterCards()">
     </div>
 
-    <!-- Navegação Superior Direita -->
-    <nav onclick="event.stopPropagation()">
-        <div class="nav-link" id="nav-google" onclick="renderHub('google')">Google</div>
-        <div class="nav-link" id="nav-streaming" onclick="renderHub('streaming')">Streamings</div>
-    </nav>
+    <!-- Navegação Superior Direita Dinâmica -->
+    <nav id="nav-bar" onclick="event.stopPropagation()"></nav>
 
-    <h1 id="main-title" onclick="resetView()">FAVS HUB</h1>
+    <h1 id="main-title" onclick="resetView()">FAVORITES HUB</h1>
     <div id="main-grid" class="grid-container" onclick="event.stopPropagation()"></div>
     <div id="no-results" class="no-results">NENHUM ATALHO ENCONTRADO</div>
 
@@ -281,6 +278,26 @@
         const searchWrapper = document.getElementById('search-wrapper');
         const searchInput = document.getElementById('search-input');
         const noResults = document.getElementById('no-results');
+        const navBar = document.getElementById('nav-bar');
+
+        function updateNav(currentHub) {
+            if (currentHub === 'home') {
+                navBar.innerHTML = `
+                    <div class="nav-link" onclick="renderHub('google')">Google</div>
+                    <div class="nav-link" onclick="renderHub('streaming')">Streamings</div>
+                `;
+            } else if (currentHub === 'google') {
+                navBar.innerHTML = `
+                    <div class="nav-link" onclick="resetView()">Favorites</div>
+                    <div class="nav-link" onclick="renderHub('streaming')">Streamings</div>
+                `;
+            } else if (currentHub === 'streaming') {
+                navBar.innerHTML = `
+                    <div class="nav-link" onclick="resetView()">Favorites</div>
+                    <div class="nav-link" onclick="renderHub('google')">Google</div>
+                `;
+            }
+        }
 
         function toggleSearch() {
             const isExpanded = searchWrapper.classList.toggle('expanded');
@@ -293,17 +310,14 @@
 
         // Atalhos globais de teclado
         document.addEventListener('keydown', (e) => {
-            // Tecla "/" para focar na pesquisa se não estiver num input
             if (e.key === '/' && document.activeElement !== searchInput) {
                 e.preventDefault();
                 searchWrapper.classList.add('expanded');
                 searchInput.focus();
             }
-            // ESC para fechar
             if (e.key === 'Escape' && searchWrapper.classList.contains('expanded')) {
                 searchWrapper.classList.remove('expanded');
             }
-            // Enter para abrir o 1º resultado visível
             if (e.key === 'Enter' && document.activeElement === searchInput) {
                 const visibleCard = document.querySelector('.fav-card[style*="display: flex"]');
                 if (visibleCard) visibleCard.click();
@@ -333,16 +347,14 @@
 
         function renderHub(hub) {
             mainGrid.innerHTML = "";
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            updateNav(hub);
 
             if (hub === 'google') {
                 mainTitle.innerText = "GOOGLE HUB";
-                document.getElementById('nav-google').classList.add('active');
                 mainGrid.innerHTML = linksGoogle.map(createCard).join('');
             } 
             else if (hub === 'streaming') {
                 mainTitle.innerText = "STREAMINGS HUB";
-                document.getElementById('nav-streaming').classList.add('active');
                 mainGrid.innerHTML = `
                     <div class="section-divider"><span>Originais</span></div>
                     ${streamOriginais.map(createCard).join('')}
@@ -355,7 +367,7 @@
 
         function resetView() {
             mainTitle.innerText = "FAVORITES HUB";
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            updateNav('home');
             searchInput.value = "";
             searchWrapper.classList.remove('expanded');
             mainGrid.innerHTML = linksHome.map(createCard).join('');
