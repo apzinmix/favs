@@ -17,11 +17,80 @@
         
         body { 
             background: var(--bg); 
-            background-image: linear-gradient(rgba(255,204,0,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,204,0,0.02) 1px, transparent 1px); 
+            background-image: linear-gradient(rgba(255,204,0,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,204,0,0.08) 1px, transparent 1px); 
             background-size: 50px 50px; 
             color: #fff; font-family: 'Inter', sans-serif; margin: 0; 
             display: flex; flex-direction: column; align-items: center; min-height: 100vh;
             padding: var(--gap-size) 20px; 
+        }
+
+        /* Container de Pesquisa Retrátil (Canto Superior Esquerdo) */
+        .search-wrapper {
+            position: absolute;
+            top: 25px;
+            left: 40px;
+            display: flex;
+            align-items: center;
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 4px 8px;
+            transition: var(--trans);
+            z-index: 100;
+        }
+
+        .search-wrapper.expanded {
+            border-color: var(--accent);
+            box-shadow: 0 0 12px rgba(255, 204, 0, 0.2);
+            background: rgba(10, 10, 10, 0.95);
+        }
+
+        .search-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            color: #777;
+            transition: var(--trans);
+        }
+
+        .search-btn:hover, .search-wrapper.expanded .search-btn {
+            color: var(--accent);
+        }
+
+        .search-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        .search-input {
+            width: 0;
+            opacity: 0;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: var(--accent);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            transition: var(--trans);
+            padding: 0;
+        }
+
+        .search-wrapper.expanded .search-input {
+            width: 160px;
+            opacity: 1;
+            padding: 0 8px;
+        }
+
+        .search-input::placeholder {
+            color: #555;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0;
+            font-size: 0.75rem;
         }
 
         /* Navegação Superior Direita */
@@ -118,9 +187,27 @@
         .fav-card:hover span { opacity: 1; transform: scale(1); text-shadow: 0 0 10px rgba(255,204,0,0.3); }
 
         .emoji-icon { font-size: 28px; display: flex; align-items: center; justify-content: center; }
+
+        @media (max-width: 600px) {
+            .search-wrapper { top: 20px; left: 20px; }
+            .search-wrapper.expanded .search-input { width: 110px; }
+            nav { top: 25px; right: 20px; gap: 15px; }
+        }
     </style>
 </head>
 <body onclick="resetView()">
+
+    <!-- Pesquisa Retrátil (Canto Superior Esquerdo) -->
+    <div class="search-wrapper" id="search-wrapper" onclick="event.stopPropagation();">
+        <div class="search-btn" onclick="toggleSearch();">
+            <svg viewBox="0 0 24 24">
+                <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+        </div>
+        <input type="text" id="search-input" class="search-input" placeholder="PESQUISAR..." oninput="filterCards()">
+    </div>
+
+    <!-- Navegação Superior Direita -->
     <nav onclick="event.stopPropagation()">
         <div class="nav-link" id="nav-google" onclick="renderHub('google')">Google</div>
         <div class="nav-link" id="nav-streaming" onclick="renderHub('streaming')">Streamings</div>
@@ -130,7 +217,6 @@
     <div id="main-grid" class="grid-container" onclick="event.stopPropagation()"></div>
 
     <script>
-        // --- BASE DE DADOS MANTIDA ---
         const linksHome = [
             { n: "YouTube", u: "https://youtube.com" },
             { n: "URL to MP3", u: "https://y2meta.is" },
@@ -170,23 +256,57 @@
         ];
 
         const streamPiratas = [
-            { n: "NetCine", u: "https://netcinevu.lat" }, { n: "Crack Sports", u: "https://cracksports.me" },
+            { n: "NetCine", u: "https://netcinebc.lat" }, { n: "Crack Sports", u: "https://cracksports.me" },
             { n: "Watchseries", u: "https://watchseries.bar" }, { n: "Solar Movie", u: "https://solarmoviesz.com" }, { n: "Hurawatch", u: "https://123chill.uk" }
         ];
 
         const createCard = (l) => `
-            <a href="${l.u}" class="fav-card" target="_blank">
+            <a href="${l.u}" class="fav-card" target="_blank" data-name="${l.n.toLowerCase()}">
                 <img src="${l.i || 'https://www.google.com/s2/favicons?domain='+l.u+'&sz=128'}">
                 <span>${l.n}</span>
             </a>`;
 
         const mainGrid = document.getElementById('main-grid');
         const mainTitle = document.getElementById('main-title');
+        const searchWrapper = document.getElementById('search-wrapper');
+        const searchInput = document.getElementById('search-input');
+
+        // --- LÓGICA DA BARRA RETRÁTIL ---
+        function toggleSearch() {
+            const isExpanded = searchWrapper.classList.toggle('expanded');
+            if (isExpanded) {
+                searchInput.focus();
+            } else if (searchInput.value === "") {
+                filterCards();
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && searchWrapper.classList.contains('expanded')) {
+                searchWrapper.classList.remove('expanded');
+            }
+        });
+
+        function filterCards() {
+            const query = searchInput.value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.fav-card');
+            const dividers = document.querySelectorAll('.section-divider');
+
+            dividers.forEach(d => d.style.display = query ? 'none' : 'flex');
+
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name');
+                if (name.includes(query)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
 
         // --- LÓGICA DE NAVEGAÇÃO ---
-
         function renderHub(hub) {
-            mainGrid.innerHTML = ""; // Limpa a tela
+            mainGrid.innerHTML = "";
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
 
             if (hub === 'google') {
@@ -204,15 +324,19 @@
                     ${streamPiratas.map(createCard).join('')}
                 `;
             }
+            filterCards();
         }
 
         function resetView() {
             mainTitle.innerText = "FAVORITES HUB";
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            searchInput.value = "";
+            searchWrapper.classList.remove('expanded');
             mainGrid.innerHTML = linksHome.map(createCard).join('');
+            filterCards();
         }
 
-        // Inicializa o site na Home
+        // Inicializa na Home
         resetView();
     </script>
 </body>
