@@ -186,7 +186,16 @@
         .fav-card:hover img, .fav-card:hover .emoji-icon { opacity: 0; transform: scale(0.5); }
         .fav-card:hover span { opacity: 1; transform: scale(1); text-shadow: 0 0 10px rgba(255,204,0,0.3); }
 
-        .emoji-icon { font-size: 28px; display: flex; align-items: center; justify-content: center; }
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+            color: #666;
+            letter-spacing: 2px;
+            padding: 40px 0;
+            display: none;
+        }
 
         @media (max-width: 600px) {
             .search-wrapper { top: 20px; left: 20px; }
@@ -197,14 +206,14 @@
 </head>
 <body onclick="resetView()">
 
-    <!-- Pesquisa Retrátil (Canto Superior Esquerdo) -->
+    <!-- Pesquisa Retrátil -->
     <div class="search-wrapper" id="search-wrapper" onclick="event.stopPropagation();">
         <div class="search-btn" onclick="toggleSearch();">
             <svg viewBox="0 0 24 24">
                 <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
             </svg>
         </div>
-        <input type="text" id="search-input" class="search-input" placeholder="PESQUISAR..." oninput="filterCards()">
+        <input type="text" id="search-input" class="search-input" placeholder="BUSCAR (/)" oninput="filterCards()">
     </div>
 
     <!-- Navegação Superior Direita -->
@@ -215,6 +224,7 @@
 
     <h1 id="main-title" onclick="resetView()">FAVS HUB</h1>
     <div id="main-grid" class="grid-container" onclick="event.stopPropagation()"></div>
+    <div id="no-results" class="no-results">NENHUM ATALHO ENCONTRADO</div>
 
     <script>
         const linksHome = [
@@ -256,8 +266,8 @@
         ];
 
         const streamPiratas = [
-            { n: "NetCine", u: "https://netcinebc.lat" }, { n: "Crack Sports", u: "https://cracksports.me" },
-            { n: "Watchseries", u: "https://watchseries.bar" }, { n: "Solar Movie", u: "https://solarmoviesz.com" }, { n: "Hurawatch", u: "https://123chill.uk" }
+            { n: "NetCine", u: "https://netcinebc.lat/" }, { n: "Crack Sports", u: "https://cracksports.me" },
+            { n: "Watchseries", u: "https://watchseries.bar" }, { n: "Solar Movie", u: "https://solarmoviesz.co" }, { n: "Hurawatch", u: "https://123chill.uk" }
         ];
 
         const createCard = (l) => `
@@ -270,8 +280,8 @@
         const mainTitle = document.getElementById('main-title');
         const searchWrapper = document.getElementById('search-wrapper');
         const searchInput = document.getElementById('search-input');
+        const noResults = document.getElementById('no-results');
 
-        // --- LÓGICA DA BARRA RETRÁTIL ---
         function toggleSearch() {
             const isExpanded = searchWrapper.classList.toggle('expanded');
             if (isExpanded) {
@@ -281,9 +291,22 @@
             }
         }
 
+        // Atalhos globais de teclado
         document.addEventListener('keydown', (e) => {
+            // Tecla "/" para focar na pesquisa se não estiver num input
+            if (e.key === '/' && document.activeElement !== searchInput) {
+                e.preventDefault();
+                searchWrapper.classList.add('expanded');
+                searchInput.focus();
+            }
+            // ESC para fechar
             if (e.key === 'Escape' && searchWrapper.classList.contains('expanded')) {
                 searchWrapper.classList.remove('expanded');
+            }
+            // Enter para abrir o 1º resultado visível
+            if (e.key === 'Enter' && document.activeElement === searchInput) {
+                const visibleCard = document.querySelector('.fav-card[style*="display: flex"]');
+                if (visibleCard) visibleCard.click();
             }
         });
 
@@ -291,6 +314,7 @@
             const query = searchInput.value.toLowerCase().trim();
             const cards = document.querySelectorAll('.fav-card');
             const dividers = document.querySelectorAll('.section-divider');
+            let visibleCount = 0;
 
             dividers.forEach(d => d.style.display = query ? 'none' : 'flex');
 
@@ -298,13 +322,15 @@
                 const name = card.getAttribute('data-name');
                 if (name.includes(query)) {
                     card.style.display = 'flex';
+                    visibleCount++;
                 } else {
                     card.style.display = 'none';
                 }
             });
+
+            noResults.style.display = (visibleCount === 0 && query !== "") ? 'block' : 'none';
         }
 
-        // --- LÓGICA DE NAVEGAÇÃO ---
         function renderHub(hub) {
             mainGrid.innerHTML = "";
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
@@ -336,7 +362,6 @@
             filterCards();
         }
 
-        // Inicializa na Home
         resetView();
     </script>
 </body>
